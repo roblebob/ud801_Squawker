@@ -30,24 +30,24 @@ import net.simonvt.schematic.annotation.PrimaryKey;
 
 public class SquawkContract {
 
-    @DataType(DataType.Type.INTEGER)
-    @PrimaryKey(onConflict = ConflictResolutionType.REPLACE)
+    @DataType( DataType.Type.INTEGER)
+    @PrimaryKey( onConflict = ConflictResolutionType.REPLACE)
     @AutoIncrement
     public static final String COLUMN_ID = "_id";
 
-    @DataType(DataType.Type.TEXT)
+    @DataType( DataType.Type.TEXT)
     @NotNull
     public static final String COLUMN_AUTHOR = "author";
 
-    @DataType(DataType.Type.TEXT)
+    @DataType( DataType.Type.TEXT)
     @NotNull
     public static final String COLUMN_AUTHOR_KEY = "authorKey";
 
-    @DataType(DataType.Type.TEXT)
+    @DataType( DataType.Type.TEXT)
     @NotNull
     public static final String COLUMN_MESSAGE = "message";
 
-    @DataType(DataType.Type.INTEGER)
+    @DataType( DataType.Type.INTEGER)
     @NotNull
     public static final String COLUMN_DATE = "date";
 

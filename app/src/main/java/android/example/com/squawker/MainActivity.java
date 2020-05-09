@@ -37,8 +37,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager .LoaderCallbacks< Cursor> {
 
     private static String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID_MESSAGES = 0;
@@ -90,15 +89,13 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_following_preferences) {
             // Opens the following activity when the menu icon is pressed
@@ -114,23 +111,19 @@ public class MainActivity extends AppCompatActivity implements
      * Loader callbacks
      */
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    @Override public Loader< Cursor> onCreateLoader(  int id,  Bundle args) {
         // This method generates a selection off of only the current followers
-        String selection = SquawkContract.createSelectionForCurrentFollowers(
-                PreferenceManager.getDefaultSharedPreferences(this));
+        String selection = SquawkContract .createSelectionForCurrentFollowers(  PreferenceManager .getDefaultSharedPreferences(this));
         Log.d(LOG_TAG, "Selection is " + selection);
-        return new CursorLoader(this, SquawkProvider.SquawkMessages.CONTENT_URI,
-                MESSAGES_PROJECTION, selection, null, SquawkContract.COLUMN_DATE + " DESC");
+        return new CursorLoader(
+                this,
+                SquawkProvider.SquawkMessages.CONTENT_URI,
+                MESSAGES_PROJECTION,
+                selection,
+                null,
+                SquawkContract.COLUMN_DATE + " DESC"
+        );
     }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
-    }
+    @Override public void onLoadFinished(   Loader< Cursor> loader,  Cursor data)    { mAdapter .swapCursor( data); }
+    @Override public void onLoaderReset(   Loader< Cursor> loader              )    { mAdapter .swapCursor(null); }
 }
