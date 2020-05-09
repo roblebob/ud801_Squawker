@@ -39,18 +39,18 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // Schematic dependencies for ContentProvider
-    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.6.3'
-    implementation 'net.simonvt.schematic:schematic:0.6.3'
+    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
+    implementation 'net.simonvt.schematic:schematic:0.7.0'
 
     // add the Firebase SDK for Google Analytics
-    implementation 'com.google.firebase:firebase-analytics:17.3.0'
+    implementation 'com.google.firebase:firebase-analytics:17.4.0'
     // add SDKs for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
 
 
     // Preferences Dependencies
-    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
 
     // TODO (3) Add the Firebase libraries and apply the GPS plugin in this file. Make sure to save the
     // google.services.json file in the app folder. After syncing the changes, you should be able
