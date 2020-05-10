@@ -22,22 +22,20 @@ import android.example.com.squawker.following.FollowingPreferenceActivity;
 import android.example.com.squawker.provider.SquawkContract;
 import android.example.com.squawker.provider.SquawkProvider;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
-
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID_MESSAGES = 0;
 
@@ -76,12 +74,13 @@ public class MainActivity extends AppCompatActivity implements
         // Add dividers
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                 mRecyclerView.getContext(),
-                mLayoutManager.getOrientation());
+                mLayoutManager.getOrientation()
+        );
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // Specify an adapter
         mAdapter = new SquawkAdapter();
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter( mAdapter);
 
         // Start the loader
         getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
@@ -112,8 +111,7 @@ public class MainActivity extends AppCompatActivity implements
      * Loader callbacks
      */
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    @Override public Loader< Cursor> onCreateLoader(int id, Bundle args) {
         // This method generates a selection off of only the current followers
         String selection = SquawkContract.createSelectionForCurrentFollowers(
                 PreferenceManager.getDefaultSharedPreferences(this));
@@ -121,14 +119,6 @@ public class MainActivity extends AppCompatActivity implements
         return new CursorLoader(this, SquawkProvider.SquawkMessages.CONTENT_URI,
                 MESSAGES_PROJECTION, selection, null, SquawkContract.COLUMN_DATE + " DESC");
     }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
-    }
+    @Override public void onLoadFinished( Loader< Cursor> loader, Cursor data)  { mAdapter.swapCursor(data); }
+    @Override public void onLoaderReset( Loader< Cursor> loader              )  { mAdapter.swapCursor(null); }
 }
