@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
+// apply plugin: 'android-apt'
 // Apply the Google Services plugin. Make sure to add the google-services.json file in the app folder. You download it from the Firebase console
 apply plugin: 'com.google.gms.google-services'
 
@@ -42,7 +42,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // Schematic dependencies for ContentProvider
-    apt 'net.simonvt.schematic:schematic-compiler:0.7.0'
+    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
     implementation 'net.simonvt.schematic:schematic:0.7.0'
 
     // Preferences Dependencies

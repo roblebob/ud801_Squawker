@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView.setAdapter( mAdapter);
 
         // Start the loader
-        getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
-
+        //getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
+        LoaderManager.getInstance( this);
     }
 
     @Override
