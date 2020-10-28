@@ -22,23 +22,26 @@ import android.example.com.squawker.following.FollowingPreferenceActivity;
 import android.example.com.squawker.provider.SquawkContract;
 import android.example.com.squawker.provider.SquawkProvider;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID_MESSAGES = 0;
 
     RecyclerView mRecyclerView;
@@ -84,11 +87,14 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(mAdapter);
 
         // Start the loader
-        getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
+        //getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
+        LoaderManager.getInstance(this);
 
-        // TODO (1) Get the test data here from the extras bundle that came with this intent.
+        // TODO☑ Get the test data here from the extras bundle that came with this intent.
         // To confirm that the data was passed in, make sure to show the data in a log statement.
-
+        Bundle extras = getIntent().getExtras();
+        if (extras != null  && extras.containsKey("test"))
+          Log.e(LOG_TAG, "--->  " + extras.getString("test"));
     }
 
     @Override
@@ -115,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements
      * Loader callbacks
      */
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // This method generates a selection off of only the current followers
@@ -125,13 +132,15 @@ public class MainActivity extends AppCompatActivity implements
                 MESSAGES_PROJECTION, selection, null, SquawkContract.COLUMN_DATE + " DESC");
     }
 
+
+
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
 }

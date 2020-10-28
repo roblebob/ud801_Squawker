@@ -1,46 +1,75 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 30
+    buildToolsVersion '30.0.2'
     defaultConfig {
         applicationId "android.example.com.squawker"
-        minSdkVersion 16
-        targetSdkVersion 25
+        minSdkVersion 25
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
+//    defaultConfig {
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                includeCompileClasspath true
+//            }
+//        }
+//    }         !!! OBSOLETE !!!
+
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.3.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    testCompile 'junit:junit:4.12'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    testImplementation 'junit:junit:4.13.1'
 
     // RecyclerView
-    compile 'com.android.support:recyclerview-v7:25.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // Schematic dependencies for ContentProvider
-    apt 'net.simonvt.schematic:schematic-compiler:0.6.3'
-    compile 'net.simonvt.schematic:schematic:0.6.3'
+    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
+    implementation 'net.simonvt.schematic:schematic:0.7.0'
+
+    // add the Firebase SDK for Google Analytics
+    //implementation 'com.google.firebase:firebase-analytics:17.6.0'
+    // add SDKs for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
 
     // Preferences Dependencies
-    compile 'com.android.support:preference-v7:25.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
 
-    // Firebase dependency
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    // TODO☑ (3) Add the Firebase libraries and apply the GPS plugin in this file.
+    //  Make sure to save the google.services.json file in the app folder.
+    //  After syncing the changes, you should be able to send a notification to your app using the Firebase console.
+    //  The app must be in the background!
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+
+    // Declare the dependencies for the Firebase Cloud Messaging and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
+
 }
-// Apply the Google Services plugin. Make sure to add the google-services.json file in the app
-// folder. You download it from the Firebase console
-apply plugin: 'com.google.gms.google-services'
