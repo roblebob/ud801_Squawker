@@ -13,6 +13,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+/**
+ * Send message data by following these steps.
+ *
+ * 1. Put App in background
+ * 2.
+ *
+ *
+ */
+
+
+
 
 package android.example.com.squawker;
 
@@ -21,6 +32,7 @@ import android.database.Cursor;
 import android.example.com.squawker.following.FollowingPreferenceActivity;
 import android.example.com.squawker.provider.SquawkContract;
 import android.example.com.squawker.provider.SquawkProvider;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -28,6 +40,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
@@ -36,6 +49,14 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.installations.InstallationTokenResult;
+import com.google.firebase.installations.remote.TokenResult;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -98,12 +119,21 @@ public class MainActivity extends AppCompatActivity implements
             Log.d(LOG_TAG, "Contains: " + extras.getString("test"));
         }
 
-        // TODO (1) Make a new package for your FCM service classes called "fcm"
-            // TODO (2) Create a new Service class that extends FirebaseInstanceIdService.
-            // You'll need to implement the onTokenRefresh method. Simply have it print out
-            // the new token.
+
         // TODO (3) Here, in MainActivity, get a token using FirebaseInstanceId.getInstance().getToken()
-        // TODO (4) Get the message from that token and print it in a log statement
+        FirebaseMessaging.getInstance().getToken() .addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+
+                // TODO (4) Get the message from that token and print it in a log statement
+                if(!task.isSuccessful()) {
+                    Log.e(LOG_TAG, "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+                String token = task.getResult();
+                Log.e(LOG_TAG, "Fetching FCM registration token:  " + token );
+            }
+        });
 
 
     }
