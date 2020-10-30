@@ -22,18 +22,21 @@ import android.example.com.squawker.following.FollowingPreferenceActivity;
 import android.example.com.squawker.provider.SquawkContract;
 import android.example.com.squawker.provider.SquawkProvider;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -86,32 +89,14 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(mAdapter);
 
         // Start the loader
-        getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
-
-
-        // TODO (1) Make a new Service in the fcm package that extends from FirebaseMessagingService.
-            // TODO (2) As part of the new Service - Override onMessageReceived. This method will
-            // be triggered whenever a squawk is received. You can get the data from the squawk
-            // message using getData(). When you send a test message, this data will include the
-            // following key/value pairs:
-                // test: true
-                // author: Ex. "TestAccount"
-                // authorKey: Ex. "key_test"
-                // message: Ex. "Hello world"
-                // date: Ex. 1484358455343
-            // TODO (3) As part of the new Service - If there is message data, get the data using
-            // the keys and do two things with it :
-                // 1. Display a notification with the first 30 character of the message
-                // 2. Use the content provider to insert a new message into the local database
-                // Hint: You shouldn't be doing content provider operations on the main thread.
-                // If you don't know how to make notifications or interact with a content provider
-                // look at the notes in the classroom for help.
+        //getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
+        LoaderManager.getInstance( this);
 
 
         // TODO (5) You can delete the code below for getting the extras from a notification message,
-        // since this was for testing purposes and not part of Squawker.
+        //  since this was for testing purposes and not part of Squawker.
         
-        // Gets the extra data from the intent that started the activity. For *notification*
+        /*// Gets the extra data from the intent that started the activity. For *notification*
         // messages, this will contain key value pairs stored in the *data* section of the message.
         Bundle extras = getIntent().getExtras();
         // Checks if the extras exist and if the key "test" from our FCM message is in the intent
@@ -125,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements
         String token = FirebaseInstanceId.getInstance().getToken();
         String msg = getString(R.string.message_token_format, token);
         Log.d(LOG_TAG, msg);
-
+        */
     }
 
     @Override
@@ -171,4 +156,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
+
+
 }

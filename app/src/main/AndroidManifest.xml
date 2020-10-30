@@ -3,6 +3,7 @@
     package="android.example.com.squawker">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -11,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity">
+            android:name=".MainActivity"
+            android:launchMode="singleTop">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,6 +45,11 @@
 
         <!-- TODO (4) Add your new service here, with an intent filter for action
         com.google.firebase.MESSAGING_EVENT -->
+        <service android:name=".fcm.SquawkFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.M"
+            </intent-filter>
+        </service>
 
     </application>
 
