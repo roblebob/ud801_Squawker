@@ -1,6 +1,9 @@
 package android.example.com.squawker.fcm;
 
-import android.app.NotificationManager;
+import androidx.core.app.NotificationManagerCompat;
+
+
+
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,7 +18,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-// import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -27,6 +29,7 @@ import java.util.concurrent.Executors;
 // TODO☑ (1) Make a new Service in the fcm package that extends from FirebaseMessagingService.
 public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
 
+    private String mDeviceToken;
 
     private static final String TAG = SquawkFirebaseMessagingService.class.getSimpleName();
 
@@ -53,8 +56,8 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
         // TODO (3) As part of the new Service -
         //   If there is message data, get the data using the keys and do two things with it :
         // TODO (3.1) ... display a notification with the first 30 character of the message
-        ((NotificationManager)  getSystemService( Context.NOTIFICATION_SERVICE))  .notify(0,
-                (new NotificationCompat.Builder(this, "SQUAWK")
+        NotificationManagerCompat.from(getApplicationContext()) .notify(0,
+                (new NotificationCompat.Builder(getApplicationContext(), "SQUAWK")
                         .setSmallIcon(R.drawable.ic_duck)
                         .setContentTitle(String.format(getString(R.string.notification_message), data.get(SquawkContract.COLUMN_AUTHOR)))
                         .setContentText( data.get(SquawkContract.COLUMN_MESSAGE).substring(0, 30))
@@ -62,7 +65,7 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
                         .setSound(  RingtoneManager.getDefaultUri( RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(
                                 PendingIntent .getActivity(
-                                        this,
+                                        getApplicationContext(),
                                         0 ,
                                         (new Intent(this, MainActivity.class)) .addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP),
                                         PendingIntent.FLAG_ONE_SHOT
@@ -104,10 +107,10 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
 
-        Log.e(TAG + "::onNewToken()",  "new token:  " + token );
-        this.token = token;
+
+        this.mDeviceToken = token;
+        Log.e(TAG + "::onNewToken()  ", token );
         sendRegistrationToServer(token);
-        super.onNewToken(token);
     }
 
 

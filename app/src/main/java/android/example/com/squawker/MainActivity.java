@@ -115,14 +115,14 @@ public class MainActivity extends AppCompatActivity implements
 //        Log.e(LOG_TAG, msg);
 
 
-        FirebaseMessaging.getInstance().getToken() .addOnCompleteListener(task -> {
+        FirebaseMessaging.getInstance().getToken() .addOnCompleteListener( (task) -> {
 
             if(!task.isSuccessful()) {
-                Log.e(LOG_TAG, "Fetching FCM registration token failed", task.getException());
+                Log.e(LOG_TAG + "----", "----> Fetching FCM registration token failed", task.getException());
                 return;
             }
             String token1 = task.getResult();
-            Log.e(LOG_TAG, "Fetching FCM registration token:  " + token1);
+            Log.e(LOG_TAG + "----", "----> Fetching FCM registration token:  " + token1);
         });
 
 
