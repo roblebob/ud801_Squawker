@@ -38,7 +38,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -107,9 +110,23 @@ public class MainActivity extends AppCompatActivity implements
 
 
         // Get token from the ID Service you created and show it in a log
-        String token = FirebaseInstanceId.getInstance().getToken();
-        String msg = getString(R.string.message_token_format, token);
-        Log.e(LOG_TAG, msg);
+//        String token = FirebaseInstanceId.getInstance().getToken();
+//        String msg = getString(R.string.message_token_format, token);
+//        Log.e(LOG_TAG, msg);
+
+
+        FirebaseMessaging.getInstance().getToken() .addOnCompleteListener(task -> {
+
+            if(!task.isSuccessful()) {
+                Log.e(LOG_TAG, "Fetching FCM registration token failed", task.getException());
+                return;
+            }
+            String token1 = task.getResult();
+            Log.e(LOG_TAG, "Fetching FCM registration token:  " + token1);
+        });
+
+
+
 
     }
 

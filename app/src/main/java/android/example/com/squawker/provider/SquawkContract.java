@@ -52,6 +52,11 @@ public class SquawkContract {
     public static final String COLUMN_DATE = "date";
 
 
+    public static final String[] COLUMNS = {
+            COLUMN_ID, COLUMN_AUTHOR, COLUMN_AUTHOR_KEY, COLUMN_MESSAGE, COLUMN_DATE
+    };
+
+
     // Topic keys as matching what is found in the database
     public static final String ASSER_KEY = "key_asser";
     public static final String CEZANNE_KEY = "key_cezanne";

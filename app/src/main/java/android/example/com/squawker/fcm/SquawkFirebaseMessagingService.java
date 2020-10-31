@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 // import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -26,7 +27,6 @@ import java.util.concurrent.Executors;
 // TODO☑ (1) Make a new Service in the fcm package that extends from FirebaseMessagingService.
 public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
 
-    private String token;
 
     private static final String TAG = SquawkFirebaseMessagingService.class.getSimpleName();
 
@@ -41,7 +41,7 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
     //   date: Ex. 1484358455343
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        Log.e(TAG + "::MessageReceived() -----> " , "From:  " + remoteMessage.getFrom() + "   Token " + this.token);
+        Log.e(TAG + "::MessageReceived() -----> " , "From:  " + remoteMessage.getFrom() + "   Token " + FirebaseMessaging.getInstance().getToken());
 
 
         Map<String, String > data = remoteMessage.getData();
@@ -79,10 +79,13 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
         Executors .newSingleThreadExecutor() .execute(  () -> {
 
             ContentValues newMessage = new ContentValues();
-            newMessage.put( SquawkContract.COLUMN_AUTHOR,  data.get( SquawkContract.COLUMN_AUTHOR));
-            newMessage.put( SquawkContract.COLUMN_MESSAGE, data.get( SquawkContract.COLUMN_MESSAGE) );
-            newMessage.put( SquawkContract.COLUMN_DATE,    data.get( SquawkContract.COLUMN_DATE));
-            newMessage.put( SquawkContract.COLUMN_AUTHOR_KEY, data.get( SquawkContract.COLUMN_AUTHOR_KEY));
+            for (String col : SquawkContract.COLUMNS) {
+                newMessage.put(col, data.get(col));
+            }
+//            newMessage.put( SquawkContract.COLUMN_AUTHOR,  data.get( SquawkContract.COLUMN_AUTHOR));
+//            newMessage.put( SquawkContract.COLUMN_MESSAGE, data.get( SquawkContract.COLUMN_MESSAGE) );
+//            newMessage.put( SquawkContract.COLUMN_DATE,    data.get( SquawkContract.COLUMN_DATE));
+//            newMessage.put( SquawkContract.COLUMN_AUTHOR_KEY, data.get( SquawkContract.COLUMN_AUTHOR_KEY));
             getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
 
         });

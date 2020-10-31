@@ -37,12 +37,12 @@
 
 
         <!-- Id service -->
-        <service android:name=".fcm.SquawkFirebaseInstanceIdService"
+        <!--service android:name=".fcm.SquawkFirebaseInstanceIdService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
-        </service>
+        </service-->
 
         <!-- TODO (4) Add your new service here, with an intent filter for action com.google.firebase.MESSAGING_EVENT -->
         <service android:name=".fcm.SquawkFirebaseMessagingService"
