@@ -17,9 +17,11 @@ package android.example.com.squawker.following;
 
 import android.example.com.squawker.R;
 import android.os.Bundle;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+
 import android.view.MenuItem;
 
 /**
