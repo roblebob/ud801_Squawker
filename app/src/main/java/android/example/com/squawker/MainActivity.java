@@ -96,21 +96,21 @@ public class MainActivity extends AppCompatActivity implements
         // TODO (5) You can delete the code below for getting the extras from a notification message,
         //  since this was for testing purposes and not part of Squawker.
         
-        /*// Gets the extra data from the intent that started the activity. For *notification*
+        // Gets the extra data from the intent that started the activity. For *notification*
         // messages, this will contain key value pairs stored in the *data* section of the message.
         Bundle extras = getIntent().getExtras();
         // Checks if the extras exist and if the key "test" from our FCM message is in the intent
         if (extras != null && extras.containsKey("test")) {
             // If the key is there, print out the value of "test"
-            Log.d(LOG_TAG, "Contains: " + extras.getString("test"));
+            Log.e(LOG_TAG, "Contains: " + extras.getString("test"));
         }
 
 
         // Get token from the ID Service you created and show it in a log
         String token = FirebaseInstanceId.getInstance().getToken();
         String msg = getString(R.string.message_token_format, token);
-        Log.d(LOG_TAG, msg);
-        */
+        Log.e(LOG_TAG, msg);
+
     }
 
     @Override
@@ -136,13 +136,14 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Loader callbacks
      */
-
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
         // This method generates a selection off of only the current followers
         String selection = SquawkContract.createSelectionForCurrentFollowers(
                 PreferenceManager.getDefaultSharedPreferences(this));
-        Log.d(LOG_TAG, "Selection is " + selection);
+        Log.e(LOG_TAG, "Selection is " + selection);
         return new CursorLoader(this, SquawkProvider.SquawkMessages.CONTENT_URI,
                 MESSAGES_PROJECTION, selection, null, SquawkContract.COLUMN_DATE + " DESC");
     }
