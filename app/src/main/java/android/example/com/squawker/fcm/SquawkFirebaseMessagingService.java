@@ -2,18 +2,24 @@ package android.example.com.squawker.fcm;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.example.com.squawker.AppExecutors;
+import android.example.com.squawker.MainActivity;
 import android.example.com.squawker.R;
 import android.example.com.squawker.provider.SquawkContract;
 import android.example.com.squawker.provider.SquawkProvider;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -57,8 +63,33 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         // TODO (3.1) ... display a notification with the first 30 character of the message
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        // Create the pending intent to launch the activity
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent, PendingIntent.FLAG_ONE_SHOT);
 
+        String author = data.get(JSON_KEY_AUTHOR);
+        String message = data.get(JSON_KEY_MESSAGE);
 
+        // If the message is longer than the max number of characters we want in our
+        // notification, truncate it and add the unicode character for ellipsis
+        if (message.length() > NOTIFICATION_MAX_CHARACTERS) {
+            message = message.substring(0, NOTIFICATION_MAX_CHARACTERS) + "\u2026";
+        }
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_duck)
+                .setContentTitle(String.format(getString(R.string.notification_message), author))
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
 
 
@@ -104,14 +135,4 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
     }
 
 
-    private String checkMessageString(String string, final int MAX) {
-
-        if (string.length() > MAX) {
-
-            String string_ = string.substring(0, MAX) + "&#2026";
-
-            return string;
-        }
-        return string;
-    }
 }
