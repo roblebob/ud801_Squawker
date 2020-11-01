@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // Start the loader
         //getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
-        LoaderManager.getInstance( this);
+        LoaderManager.getInstance( this).initLoader(0, null, this);
 
 
         // TODO (5) You can delete the code below for getting the extras from a notification message,
@@ -110,11 +110,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
         // Get token from the ID Service you created and show it in a log
-//        String token = FirebaseInstanceId.getInstance().getToken();
-//        String msg = getString(R.string.message_token_format, token);
-//        Log.e(LOG_TAG, msg);
-
-
         FirebaseMessaging.getInstance().getToken() .addOnCompleteListener( (task) -> {
 
             if(!task.isSuccessful()) {
@@ -124,10 +119,6 @@ public class MainActivity extends AppCompatActivity implements
             String token1 = task.getResult();
             Log.e(LOG_TAG + "----", "----> Fetching FCM registration token:  " + token1);
         });
-
-
-
-
     }
 
     @Override

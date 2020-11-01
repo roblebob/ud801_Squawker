@@ -123,6 +123,7 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
             }
         };
 
+
         insertSquawkTask.execute();
     }
 
