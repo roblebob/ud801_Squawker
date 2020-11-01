@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(mAdapter);
 
         // Start the loader
-        //getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
-        LoaderManager.getInstance( this);
+        getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
+        //LoaderManager.getInstance( this);
 
 
         // Get token from the ID Service you created and show it in a log
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements
         // This method generates a selection off of only the current followers
         String selection = SquawkContract.createSelectionForCurrentFollowers(
                 PreferenceManager.getDefaultSharedPreferences(this));
-        Log.d(LOG_TAG, "Selection is " + selection);
+        Log.e(LOG_TAG, "Selection is " + selection);
         return new CursorLoader(this, SquawkProvider.SquawkMessages.CONTENT_URI,
                 MESSAGES_PROJECTION, selection, null, SquawkContract.COLUMN_DATE + " DESC");
     }
