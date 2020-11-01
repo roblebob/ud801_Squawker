@@ -15,6 +15,7 @@
 */
 package android.example.com.squawker.fcm;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -27,13 +28,19 @@ import android.example.com.squawker.provider.SquawkProvider;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Listens for squawk FCM messages both in the background and the foreground and responds
@@ -41,6 +48,8 @@ import java.util.Map;
  * depending on type of message
  */
 public class SquawkFirebaseMessageService extends FirebaseMessagingService {
+
+    private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private static final String JSON_KEY_AUTHOR = SquawkContract.COLUMN_AUTHOR;
     private static final String JSON_KEY_AUTHOR_KEY = SquawkContract.COLUMN_AUTHOR_KEY;
@@ -50,6 +59,8 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
     private static final int NOTIFICATION_MAX_CHARACTERS = 30;
     private static String LOG_TAG = SquawkFirebaseMessageService.class.getSimpleName();
 
+    private static final String SQUAWK_NOTIFICATION_CHANNEL_ID = "squark_notification_channel_id";
+    private static final String SQUAWK_NOTIFICATION_CHANNEL_NAME = "squark_notification_channel_name";
     /**
      * Called when message is received.
      *
@@ -90,6 +101,12 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
         }
     }
 
+    @Override
+    public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
+
+    }
+
     /**
      * Inserts a single squawk into the database;
      *
@@ -98,21 +115,14 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
     private void insertSquawk(final Map<String, String> data) {
 
         // Database operations should not be done on the main thread
-        AsyncTask<Void, Void, Void> insertSquawkTask = new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                ContentValues newMessage = new ContentValues();
-                newMessage.put(SquawkContract.COLUMN_AUTHOR, data.get(JSON_KEY_AUTHOR));
-                newMessage.put(SquawkContract.COLUMN_MESSAGE, data.get(JSON_KEY_MESSAGE).trim());
-                newMessage.put(SquawkContract.COLUMN_DATE, data.get(JSON_KEY_DATE));
-                newMessage.put(SquawkContract.COLUMN_AUTHOR_KEY, data.get(JSON_KEY_AUTHOR_KEY));
-                getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
-                return null;
-            }
-        };
-
-        insertSquawkTask.execute();
+        mExecutor.execute( () -> {
+            ContentValues newMessage = new ContentValues();
+            newMessage.put(SquawkContract.COLUMN_AUTHOR, data.get(JSON_KEY_AUTHOR));
+            newMessage.put(SquawkContract.COLUMN_MESSAGE, data.get(JSON_KEY_MESSAGE).trim());
+            newMessage.put(SquawkContract.COLUMN_DATE, data.get(JSON_KEY_DATE));
+            newMessage.put(SquawkContract.COLUMN_AUTHOR_KEY, data.get(JSON_KEY_AUTHOR_KEY));
+            getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
+        });
     }
 
 
@@ -137,8 +147,12 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
             message = message.substring(0, NOTIFICATION_MAX_CHARACTERS) + "\u2026";
         }
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.createNotificationChannel( new NotificationChannel(SQUAWK_NOTIFICATION_CHANNEL_ID, SQUAWK_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH));
+
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, SQUAWK_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_duck)
                 .setContentTitle(String.format(getString(R.string.notification_message), author))
                 .setContentText(message)
@@ -146,8 +160,7 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
