@@ -51,6 +51,12 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
     private static final int NOTIFICATION_MAX_CHARACTERS = 30;
     private static String LOG_TAG = SquawkFirebaseMessageService.class.getSimpleName();
 
+
+    private static final int SQUAWK_NOTIFICATION_ID = 132243243;
+    private static final String SQUAWK_NOTIFICATION_CHANNEL_ID = "squawk_notication_channel";
+    private static final String SQUAWK_NOTIFICATION_CHANNEL_NAME = "squawk_notication_channel_name";
+    private static final String  SQUAWK_NOTIFICATION_TITLE = "squawk_notification_title";
+
     /**
      * Called when message is received.
      *
@@ -141,7 +147,7 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.createNotificationChannel( new NotificationChannel("notification_channel",  ));
+        notificationManager.createNotificationChannel( new NotificationChannel(SQUAWK_NOTIFICATION_CHANNEL_ID, SQUAWK_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH ));
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
