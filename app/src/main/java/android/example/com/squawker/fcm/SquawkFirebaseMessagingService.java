@@ -14,6 +14,7 @@ import android.example.com.squawker.R;
 import android.example.com.squawker.provider.SquawkContract;
 import android.example.com.squawker.provider.SquawkProvider;
 import android.media.RingtoneManager;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -84,19 +85,35 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
         //          Hint:   You shouldn't be doing content provider operations on the main thread.
         //                  If you don't know how to make notifications or interact with a content provider
         //                  look at the notes in the classroom for help.
-        Executors .newSingleThreadExecutor() .execute(  () -> {
+//        Executors .newSingleThreadExecutor() .execute(  () -> {
+//
+//            ContentValues newMessage = new ContentValues();
+//            for (String col : SquawkContract.COLUMNS) {
+//                newMessage.put(col, data.get(col));
+//            }
+////            newMessage.put( SquawkContract.COLUMN_AUTHOR,  data.get( SquawkContract.COLUMN_AUTHOR));
+////            newMessage.put( SquawkContract.COLUMN_MESSAGE, data.get( SquawkContract.COLUMN_MESSAGE) );
+////            newMessage.put( SquawkContract.COLUMN_DATE,    data.get( SquawkContract.COLUMN_DATE));
+////            newMessage.put( SquawkContract.COLUMN_AUTHOR_KEY, data.get( SquawkContract.COLUMN_AUTHOR_KEY));
+//            getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
+//            Log.e(TAG, "----->   " + newMessage.toString());
+//        });
+        // Database operations should not be done on the main thread
+        AsyncTask<Void, Void, Void> insertSquawkTask = new AsyncTask<Void, Void, Void>() {
 
-            ContentValues newMessage = new ContentValues();
-            for (String col : SquawkContract.COLUMNS) {
-                newMessage.put(col, data.get(col));
+            @Override
+            protected Void doInBackground(Void...voids) {
+                ContentValues newMessage = new ContentValues();
+                newMessage.put(SquawkContract.COLUMN_AUTHOR, data.get(JSON_KEY_AUTHOR));
+                newMessage.put(SquawkContract.COLUMN_MESSAGE, data.get(JSON_KEY_MESSAGE).trim());
+                newMessage.put(SquawkContract.COLUMN_DATE, data.get(JSON_KEY_DATE));
+                newMessage.put(SquawkContract.COLUMN_AUTHOR_KEY, data.get(JSON_KEY_AUTHOR_KEY));
+                getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
+                return null;
             }
-//            newMessage.put( SquawkContract.COLUMN_AUTHOR,  data.get( SquawkContract.COLUMN_AUTHOR));
-//            newMessage.put( SquawkContract.COLUMN_MESSAGE, data.get( SquawkContract.COLUMN_MESSAGE) );
-//            newMessage.put( SquawkContract.COLUMN_DATE,    data.get( SquawkContract.COLUMN_DATE));
-//            newMessage.put( SquawkContract.COLUMN_AUTHOR_KEY, data.get( SquawkContract.COLUMN_AUTHOR_KEY));
-            getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
-            Log.e(TAG, "----->   " + newMessage.toString());
-        });
+        };
+
+        insertSquawkTask.execute();
     }
 
 
