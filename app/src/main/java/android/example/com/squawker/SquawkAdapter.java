@@ -18,6 +18,7 @@ package android.example.com.squawker;
 
 import android.database.Cursor;
 import android.example.com.squawker.provider.SquawkContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import java.util.Date;
  * Converts cursor data for squawk messages into visible list items in a RecyclerView
  */
 public class SquawkAdapter extends RecyclerView.Adapter<SquawkAdapter.SquawkViewHolder> {
-
+    private static final String TAG = SquawkAdapter.class.getSimpleName();
 
     private Cursor mData;
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("dd MMM");
@@ -55,6 +56,8 @@ public class SquawkAdapter extends RecyclerView.Adapter<SquawkAdapter.SquawkView
 
     @Override
     public void onBindViewHolder(SquawkViewHolder holder, int position) {
+
+        Log.e(TAG, "---->>  " + this.getItemCount());
         mData.moveToPosition(position);
 
         String message = mData.getString(MainActivity.COL_NUM_MESSAGE);

@@ -38,6 +38,16 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = SquawkFirebaseMessagingService.class.getSimpleName();
 
+
+    private static final String JSON_KEY_AUTHOR = SquawkContract.COLUMN_AUTHOR;
+    private static final String JSON_KEY_AUTHOR_KEY = SquawkContract.COLUMN_AUTHOR_KEY;
+    private static final String JSON_KEY_MESSAGE = SquawkContract.COLUMN_MESSAGE;
+    private static final String JSON_KEY_DATE = SquawkContract.COLUMN_DATE;
+
+
+
+
+
     // TODO (2) As part of the new Service - Override onMessageReceived.
     //  This method will be triggered whenever a squawk is received.
     //  You can get the data from the squawk message using getData().
