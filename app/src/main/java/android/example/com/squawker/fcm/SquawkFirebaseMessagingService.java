@@ -61,21 +61,22 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager .createNotificationChannel( new NotificationChannel(SQUAWK_NOTIFICATION_CHANNEL_ID,
                                                                                 SQUAWK_NOTIFICATION_CHANNEL_NAME,
                                                                                 NotificationManager.IMPORTANCE_HIGH));
-        notificationManager.notify(SQUAWK_NOTIFICATION_ID, (new NotificationCompat.Builder(this, SQUAWK_NOTIFICATION_CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.ic_duck)
-                                    .setContentTitle(String.format(getString(R.string.notification_message), data.get(SquawkContract.COLUMN_AUTHOR)))
-                                    .setContentText( data.get(SquawkContract.COLUMN_MESSAGE))
-                                    .setAutoCancel(true)
-                                    .setSound(  RingtoneManager.getDefaultUri( RingtoneManager.TYPE_NOTIFICATION))
-                                    .setContentIntent(
-                                            PendingIntent .getActivity(
-                                                    this,
-                                                    0 ,
-                                                    (new Intent(this, MainActivity.class)) .addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP),
-                                                    PendingIntent.FLAG_ONE_SHOT
-                                            )
-                                    )
-                            ).build()
+        notificationManager.notify(SQUAWK_NOTIFICATION_ID,
+                (new NotificationCompat.Builder(this, SQUAWK_NOTIFICATION_CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_duck)
+                        .setContentTitle(String.format(getString(R.string.notification_message), data.get(SquawkContract.COLUMN_AUTHOR)))
+                        .setContentText( data.get(SquawkContract.COLUMN_MESSAGE))
+                        .setAutoCancel(true)
+                        .setSound(  RingtoneManager.getDefaultUri( RingtoneManager.TYPE_NOTIFICATION))
+                        .setContentIntent(
+                                PendingIntent .getActivity(
+                                        this,
+                                        0 ,
+                                        (new Intent(this, MainActivity.class)) .addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP),
+                                        PendingIntent.FLAG_ONE_SHOT
+                                )
+                        )
+                ).build()
         );
 
 
