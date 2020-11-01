@@ -118,8 +118,10 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
                 return null;
             }
         };
-
         insertSquawkTask.execute();
+
+
+
     }
 
 
@@ -150,7 +152,7 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
         notificationManager.createNotificationChannel( new NotificationChannel(SQUAWK_NOTIFICATION_CHANNEL_ID, SQUAWK_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH ));
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, SQUAWK_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_duck)
                 .setContentTitle(String.format(getString(R.string.notification_message), author))
                 .setContentText(message)
