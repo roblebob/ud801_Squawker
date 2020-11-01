@@ -15,6 +15,7 @@
 */
 package android.example.com.squawker.fcm;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -137,6 +138,11 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
             message = message.substring(0, NOTIFICATION_MAX_CHARACTERS) + "\u2026";
         }
 
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.createNotificationChannel( new NotificationChannel("notification_channel",  ));
+
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_duck)
@@ -146,8 +152,6 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
