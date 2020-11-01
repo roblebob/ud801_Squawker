@@ -17,9 +17,11 @@ package android.example.com.squawker.following;
 
 import android.content.SharedPreferences;
 import android.example.com.squawker.R;
+import android.example.com.squawker.provider.SquawkContract;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -47,6 +49,8 @@ public class FollowingPreferenceFragment extends PreferenceFragmentCompat implem
         //   subscribes to Lyla's squawks.
         //   HINT: Checkout res->xml->following_squawker.xml. Note how the keys for each of the
         //   preferences matches the topic to subscribe to for each instructor.
+        Preference preference = getPreferenceScreen(). findPreference( key);
+        if preference
         if (sharedPreferences.getBoolean(key,false)) {
             FirebaseMessaging.getInstance().subscribeToTopic(key);
         } else {
@@ -55,18 +59,16 @@ public class FollowingPreferenceFragment extends PreferenceFragmentCompat implem
 
     }
 
-    // TODO (3) Make sure to register and unregister this as a Shared Preference Change listener, in
-    // onCreate and onDestroy.
-
-
+    // TODO (3) Make sure to register and unregister this as a Shared Preference Change listener, in onCreate and onDestroy.
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.registerForContextMenu();
+        // Add the shared preference change listener
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getPreferenceScreen() .getSharedPreferences() .unregisterOnSharedPreferenceChangeListener(this);
     }
 }
