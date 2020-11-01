@@ -23,6 +23,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -49,14 +51,14 @@ public class FollowingPreferenceFragment extends PreferenceFragmentCompat implem
         //   subscribes to Lyla's squawks.
         //   HINT: Checkout res->xml->following_squawker.xml. Note how the keys for each of the
         //   preferences matches the topic to subscribe to for each instructor.
-        Preference preference = getPreferenceScreen(). findPreference( key);
-        if preference
-        if (sharedPreferences.getBoolean(key,false)) {
-            FirebaseMessaging.getInstance().subscribeToTopic(key);
-        } else {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(key);
-        }
 
+        if ( findPreference( key) instanceof SwitchPreferenceCompat) {
+            if (sharedPreferences.getBoolean(key, false)) {
+                FirebaseMessaging.getInstance().subscribeToTopic(key);
+            } else {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(key);
+            }
+        }
     }
 
     // TODO (3) Make sure to register and unregister this as a Shared Preference Change listener, in onCreate and onDestroy.

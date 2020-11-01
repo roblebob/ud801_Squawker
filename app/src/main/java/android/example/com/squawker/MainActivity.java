@@ -42,6 +42,10 @@ import android.view.MenuItem;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+
+// https://squawkerfcmserver.udacity.com/
+
+
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
