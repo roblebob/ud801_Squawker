@@ -3,7 +3,8 @@ package android.example.com.squawker.fcm;
 import androidx.core.app.NotificationManagerCompat;
 
 
-
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,7 +30,10 @@ import java.util.concurrent.Executors;
 // TODO☑ (1) Make a new Service in the fcm package that extends from FirebaseMessagingService.
 public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
 
-    private String mDeviceToken;
+    private static final int SQUAWK_NOTIFICATION_ID = 132243243;
+    private static final String SQUAWK_NOTIFICATION_CHANNEL_ID = "squawk_notication_channel";
+    private static final String SQUAWK_NOTIFICATION_CHANNEL_NAME = "squawk_notication_channel_name";
+    private static final String  SQUAWK_NOTIFICATION_TITLE = "squawk_notification_title";
 
     private static final String TAG = SquawkFirebaseMessagingService.class.getSimpleName();
 
@@ -46,32 +50,32 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         Log.e(TAG + "::MessageReceived() -----> " , "From:  " + remoteMessage.getFrom() + "   Token " + FirebaseMessaging.getInstance().getToken());
 
-
+        super.onMessageReceived(remoteMessage);
         Map<String, String > data = remoteMessage.getData();
-        if (data.isEmpty()) {
-            super.onMessageReceived(remoteMessage);
-            return;
-        }
+        if (data.isEmpty()) { return; }
 
         // TODO (3) As part of the new Service -
         //   If there is message data, get the data using the keys and do two things with it :
         // TODO (3.1) ... display a notification with the first 30 character of the message
-        NotificationManagerCompat.from(getApplicationContext()) .notify(0,
-                (new NotificationCompat.Builder(getApplicationContext(), "SQUAWK")
-                        .setSmallIcon(R.drawable.ic_duck)
-                        .setContentTitle(String.format(getString(R.string.notification_message), data.get(SquawkContract.COLUMN_AUTHOR)))
-                        .setContentText( data.get(SquawkContract.COLUMN_MESSAGE).substring(0, 30))
-                        .setAutoCancel(true)
-                        .setSound(  RingtoneManager.getDefaultUri( RingtoneManager.TYPE_NOTIFICATION))
-                        .setContentIntent(
-                                PendingIntent .getActivity(
-                                        getApplicationContext(),
-                                        0 ,
-                                        (new Intent(this, MainActivity.class)) .addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP),
-                                        PendingIntent.FLAG_ONE_SHOT
-                                )
-                        )
-                ).build()
+        NotificationManager notificationManager = (NotificationManager) getSystemService( NotificationManager.class);
+        notificationManager .createNotificationChannel( new NotificationChannel(SQUAWK_NOTIFICATION_CHANNEL_ID,
+                                                                                SQUAWK_NOTIFICATION_CHANNEL_NAME,
+                                                                                NotificationManager.IMPORTANCE_HIGH));
+        notificationManager.notify(SQUAWK_NOTIFICATION_ID, (new NotificationCompat.Builder(this, SQUAWK_NOTIFICATION_CHANNEL_ID)
+                                    .setSmallIcon(R.drawable.ic_duck)
+                                    .setContentTitle(String.format(getString(R.string.notification_message), data.get(SquawkContract.COLUMN_AUTHOR)))
+                                    .setContentText( data.get(SquawkContract.COLUMN_MESSAGE))
+                                    .setAutoCancel(true)
+                                    .setSound(  RingtoneManager.getDefaultUri( RingtoneManager.TYPE_NOTIFICATION))
+                                    .setContentIntent(
+                                            PendingIntent .getActivity(
+                                                    this,
+                                                    0 ,
+                                                    (new Intent(this, MainActivity.class)) .addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP),
+                                                    PendingIntent.FLAG_ONE_SHOT
+                                            )
+                                    )
+                            ).build()
         );
 
 
@@ -90,7 +94,7 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
 //            newMessage.put( SquawkContract.COLUMN_DATE,    data.get( SquawkContract.COLUMN_DATE));
 //            newMessage.put( SquawkContract.COLUMN_AUTHOR_KEY, data.get( SquawkContract.COLUMN_AUTHOR_KEY));
             getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
-
+            Log.e(TAG, "----->   " + newMessage.toString());
         });
     }
 
@@ -103,6 +107,7 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
 
 
 
+    private String mDeviceToken;
 
     @Override
     public void onNewToken(@NonNull String token) {
