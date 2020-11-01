@@ -25,6 +25,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 
@@ -45,7 +46,7 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
     private static final String JSON_KEY_DATE = SquawkContract.COLUMN_DATE;
 
 
-
+    private Executor mExecutor = Executors.newSingleThreadExecutor();
 
 
     // TODO (2) As part of the new Service - Override onMessageReceived.
@@ -95,36 +96,38 @@ public class SquawkFirebaseMessagingService extends FirebaseMessagingService {
         //          Hint:   You shouldn't be doing content provider operations on the main thread.
         //                  If you don't know how to make notifications or interact with a content provider
         //                  look at the notes in the classroom for help.
-//        Executors .newSingleThreadExecutor() .execute(  () -> {
-//
-//            ContentValues newMessage = new ContentValues();
-//            for (String col : SquawkContract.COLUMNS) {
-//                newMessage.put(col, data.get(col));
-//            }
-////            newMessage.put( SquawkContract.COLUMN_AUTHOR,  data.get( SquawkContract.COLUMN_AUTHOR));
-////            newMessage.put( SquawkContract.COLUMN_MESSAGE, data.get( SquawkContract.COLUMN_MESSAGE) );
-////            newMessage.put( SquawkContract.COLUMN_DATE,    data.get( SquawkContract.COLUMN_DATE));
-////            newMessage.put( SquawkContract.COLUMN_AUTHOR_KEY, data.get( SquawkContract.COLUMN_AUTHOR_KEY));
-//            getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
-//            Log.e(TAG, "----->   " + newMessage.toString());
-//        });
-        // Database operations should not be done on the main thread
-        AsyncTask<Void, Void, Void> insertSquawkTask = new AsyncTask<Void, Void, Void>() {
+        mExecutor  .execute(  () -> {
 
-            @Override
-            protected Void doInBackground(Void...voids) {
-                ContentValues newMessage = new ContentValues();
-                newMessage.put(SquawkContract.COLUMN_AUTHOR, data.get(JSON_KEY_AUTHOR));
-                newMessage.put(SquawkContract.COLUMN_MESSAGE, data.get(JSON_KEY_MESSAGE).trim());
-                newMessage.put(SquawkContract.COLUMN_DATE, data.get(JSON_KEY_DATE));
-                newMessage.put(SquawkContract.COLUMN_AUTHOR_KEY, data.get(JSON_KEY_AUTHOR_KEY));
-                getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
-                return null;
+            ContentValues newMessage = new ContentValues();
+            for (String col : SquawkContract.COLUMNS) {
+                newMessage.put(col, data.get(col));
             }
-        };
+//            newMessage.put( SquawkContract.COLUMN_AUTHOR,  data.get( SquawkContract.COLUMN_AUTHOR));
+//            newMessage.put( SquawkContract.COLUMN_MESSAGE, data.get( SquawkContract.COLUMN_MESSAGE) );
+//            newMessage.put( SquawkContract.COLUMN_DATE,    data.get( SquawkContract.COLUMN_DATE));
+//            newMessage.put( SquawkContract.COLUMN_AUTHOR_KEY, data.get( SquawkContract.COLUMN_AUTHOR_KEY));
+            getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
+            Log.e(TAG, "----->   " + newMessage.toString());
+        });
 
 
-        insertSquawkTask.execute();
+//        // Database operations should not be done on the main thread
+//        AsyncTask<Void, Void, Void> insertSquawkTask = new AsyncTask<Void, Void, Void>() {
+//
+//            @Override
+//            protected Void doInBackground(Void...voids) {
+//                ContentValues newMessage = new ContentValues();
+//                newMessage.put(SquawkContract.COLUMN_AUTHOR, data.get(JSON_KEY_AUTHOR));
+//                newMessage.put(SquawkContract.COLUMN_MESSAGE, data.get(JSON_KEY_MESSAGE).trim());
+//                newMessage.put(SquawkContract.COLUMN_DATE, data.get(JSON_KEY_DATE));
+//                newMessage.put(SquawkContract.COLUMN_AUTHOR_KEY, data.get(JSON_KEY_AUTHOR_KEY));
+//                getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
+//                return null;
+//            }
+//        };
+//
+//
+//        insertSquawkTask.execute();
     }
 
 
